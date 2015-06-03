@@ -25,7 +25,7 @@ module Genebrand
       File.open(filename, 'r').each_line do |line|
         data = line.split("\t")
 
-        if !is_numeric?(data[0]) and (/\A[a-zA-Z0-9]{2,}\z/.match(data[0]) != nil)
+        if !is_numeric?(data[0]) and (/\A[a-zA-Z0-9]{2,10}\z/.match(data[0]) != nil)
           data[1].split("").each do |partofsp|
             if table.has_key?(partofsp)
               table[partofsp].push(data[0])

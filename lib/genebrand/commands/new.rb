@@ -27,7 +27,9 @@ module Genebrand
           choose do |menu|
             menu.prompt = "What should we add?".yellow
 
-            menu.choice("Any word") { brand.push({ :type => "word", :word => ask("Enter word (English, no spaces and punctiatio)")}) and puts }
+            menu.choice("Any word") { brand.push({ :type => "word",
+              :word => ask("Enter word (English, no spaces and punctiatio)")})
+              and puts }
             menu.choice("Specific part of speech") { brand.push(pickpart) }
 
             if brand.length > 1
@@ -60,8 +62,42 @@ module Genebrand
       end
 
       def addfilters(data)
+        puts
+
         if data[:filters] == nil
-          data[:filters] = Array.new
+          data[:filters] = Hash.new
+        end
+
+        stopit = false
+
+        until stopit do
+          choose do |menu|
+            menu.prompt = "Choose filters for this words".yellow
+
+            if data[:filters][:minlen] == nil
+              menu.choice("Minimum length") do
+                data[:filters][:minlen] = ask("Enter minimum word length", Integer) do
+                  |q| q.in 1..10
+                end
+              end
+            end
+
+            if data[:filters][:maxlen] == nil
+              menu.choice("Maximum length") do
+                data[:filters][:maxlen] = ask("Enter maximum word length", Integer) do
+                  |q| q.in 1..10
+                end
+              end
+            end
+
+            if data[:filters][:starts] == nil
+              menu.choice("Starts with") do
+                data[:filters][:starts] = ask("Enter symbols word should start with")
+              end
+            end
+              menu.choice("Ends with")
+              menu.choice("Contains")
+          end
         end
       end
     end
