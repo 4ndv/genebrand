@@ -14,13 +14,20 @@ module Genebrand
       end
 
       def process(args, options)
-        puts "Hello! Let's generate some brands!"
+        puts "Hello! Let's generate some brands!".cyan
         puts
-        choose do |menu|
-          menu.prompt = "What should we add?"
 
-          menu.choice(:word) { say "Any word" }
-          menu.choice(:spec) { say "Specific part of speech" }
+        brand = Array.new
+        stopit = false
+
+        until stopit
+          choose do |menu|
+            menu.prompt = "What should we add?".yellow
+
+            menu.choice("Any word") { brand.push(ask("Enter word (English, no spaces and punctiatio)")) }
+            menu.choice("Specific part of speech") { say "Specific part of speech" }
+            menu.choice("Enough, show me some brands!")
+          end
         end
       end
     end

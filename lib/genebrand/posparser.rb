@@ -1,8 +1,11 @@
 module Genebrand
   class PosParser
+    require 'json'
+    require 'fileutils'
+
     def parse(filename)
       if not File.exists?(filename)
-        raise FileNotFoundException
+        raise "File not found: #{filename}"
         return
       end
 
@@ -21,14 +24,22 @@ module Genebrand
 
       File.open(filename, 'r').each_line do |line|
         data = line.split("\t")
-        data[1].split("").each do |partofsp|
-          if table.has_key?(partofsp)
-            table[partofsp].push(data[0])
+
+        if (!data[0].include?("-")) and (!data[0].include?("'")) and (!data[0].include?("*")) and (!data[0].include?("$"))
+          data[1].split("").each do |partofsp|
+            if table.has_key?(partofsp)
+              table[partofsp].push(data[0])
+            end
           end
         end
       end
 
       return parsed
+    end
+
+    def parseandsave(filename)
+      FileUtils.mkdir_p 'lib/data'
+      File.open("lib/data/posinfo.json", 'w+') {|f| f.write(self.parse(filename).to_json) }
     end
   end
 end

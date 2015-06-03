@@ -23,4 +23,5 @@ Mercenary.program(:genebrand) do |p|
     end
   end
 
+  Genebrand::Command.subclasses.each { |c| c.load_command(p) }
 end

@@ -11,5 +11,12 @@ task :buildgem do
   `gem uninstall genebrand -x`
   `rm ./genebrand-*.gem`
   `gem build genebrand.gemspec`
-  `gem install ./genebrand-#{Genebrand::VERSION}.gem`  
+  `gem install ./genebrand-#{Genebrand::VERSION}.gem`
+end
+
+task :parsepos do
+  require "./lib/genebrand/posparser.rb"
+
+  parser = Genebrand::PosParser.new
+  parser.parseandsave("pos.txt")
 end

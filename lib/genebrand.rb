@@ -19,8 +19,6 @@ module Genebrand
   autoload :VERSION, 'genebrand/version'
   autoload :Logger, 'genebrand/logger'
 
-  Genebrand::Command.subclasses.each { |c| c.load_command(p) }
-
   class << self
   end
 end
