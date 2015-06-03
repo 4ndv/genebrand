@@ -18,5 +18,5 @@ task :parsepos do
   require "./lib/genebrand/posparser.rb"
 
   parser = Genebrand::PosParser.new
-  parser.parseandsave("pos.txt")
+  parser.parseandsave("lib/data/pos.txt")
 end

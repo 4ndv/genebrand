@@ -1,6 +1,8 @@
 module Genebrand
   class New < Command
     class << self
+      require 'json'
+
       def load_command(p)
         p.command(:new) do |c|
           c.syntax 'new'
@@ -19,15 +21,47 @@ module Genebrand
 
         brand = Array.new
         stopit = false
+        gen = Genebrand::Generator.new
 
         until stopit
           choose do |menu|
             menu.prompt = "What should we add?".yellow
 
-            menu.choice("Any word") { brand.push(ask("Enter word (English, no spaces and punctiatio)")) }
-            menu.choice("Specific part of speech") { say "Specific part of speech" }
-            menu.choice("Enough, show me some brands!")
+            menu.choice("Any word") { brand.push({ :type => "word", :word => ask("Enter word (English, no spaces and punctiatio)")}) and puts }
+            menu.choice("Specific part of speech") { brand.push(pickpart) }
+
+            if brand.length > 1
+              menu.choice("Enough, show me some brands!") { stopit = true }
+            end
           end
+        end
+      end
+
+      def pickpart
+        puts
+
+        data = { :type => "part" }
+        part = ""
+
+        choose do |menu|
+          menu.prompt = "What part of speech should we add?".yellow
+
+          menu.choice("Noun") { part = "noun" }
+          menu.choice("Plural") { part = "plur" }
+          menu.choice("Verb participle") { part = "verb_part" }
+          menu.choice("Verb transitive") { part = "verb_trans" }
+          menu.choice("Verb intransitive") { part = "verb_intrans" }
+          menu.choice("Adjective") { part = "adj" }
+        end
+
+        data[:part] = part
+
+        addfilters(data)
+      end
+
+      def addfilters(data)
+        if data[:filters] == nil
+          data[:filters] = Array.new
         end
       end
     end

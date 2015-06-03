@@ -18,6 +18,7 @@ module Genebrand
   autoload :PosParser, 'genebrand/posparser'
   autoload :VERSION, 'genebrand/version'
   autoload :Logger, 'genebrand/logger'
+  autoload :Generator, 'genebrand/generator'
 
   class << self
   end
