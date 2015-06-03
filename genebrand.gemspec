@@ -10,6 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["andv@outlook.com"]
 
   spec.summary       = %q{Genebrand is a small brands generator}
+  spec.description   = %q{CLI brand names generator}
   spec.homepage      = "https://github.com/andreyviktorov/genebrand"
   spec.license       = "MIT"
 
