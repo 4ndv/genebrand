@@ -13,7 +13,7 @@ Mercenary.program(:genebrand) do |p|
 
   p.action do |args, options|
     if args.empty?
-      Genebrand::Logger.error "A subcommand is required."
+      Genebrand::Logger.hint "A subcommand is required."
       abort
     else
       unless p.has_command?(args.first)
