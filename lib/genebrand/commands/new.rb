@@ -95,6 +95,7 @@ module Genebrand
                 data[:filters][:starts] = ask("Enter symbols word should start with")
               end
             end
+            
               menu.choice("Ends with")
               menu.choice("Contains")
           end
