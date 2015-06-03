@@ -4,7 +4,7 @@ CLI brand names generator
 
 ## Installation
 
-$ gem install genebrand
+    $ gem install genebrand
 
 Or add this line to your application's Gemfile:
 
