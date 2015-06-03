@@ -1,0 +1,26 @@
+#!/usr/bin/env ruby
+STDOUT.sync = true
+
+$:.unshift File.join(File.dirname(__FILE__), *%w{ .. lib })
+
+require 'genebrand'
+require 'mercenary'
+
+Mercenary.program(:genebrand) do |p|
+  p.version Genebrand::VERSION
+  p.description 'Genebrand is a small brands generator'
+  p.syntax 'genebrand <subcommand> [options]'
+
+  p.action do |args, options|
+    if args.empty?
+      Genebrand::Logger.hint "A subcommand is required."
+      abort
+    else
+      unless p.has_command?(args.first)
+        Genebrand::Logger.hint "Invalid command. Use --help for more information"
+        abort
+      end
+    end
+  end
+
+end
