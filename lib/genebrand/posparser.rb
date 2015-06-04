@@ -24,7 +24,6 @@ module Genebrand
         return
       end
 
-
       File.open(filename, 'r').each_line do |line|
         data = line.split("\t")
 
