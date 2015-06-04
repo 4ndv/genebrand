@@ -21,7 +21,7 @@ module Genebrand
 
         brand = Array.new
         stopit = false
-        gen = Genebrand::Generator.new
+        @gen = Genebrand::Generator.new
 
         until stopit
           choose do |menu|
@@ -46,12 +46,12 @@ module Genebrand
         choose do |menu|
           menu.prompt = "What part of speech should we add?".yellow
 
-          menu.choice("Noun") { part = "noun" }
-          menu.choice("Plural") { part = "plur" }
-          menu.choice("Verb participle") { part = "verb_part" }
-          menu.choice("Verb transitive") { part = "verb_trans" }
-          menu.choice("Verb intransitive") { part = "verb_intrans" }
-          menu.choice("Adjective") { part = "adj" }
+          menu.choice("Noun (#{@gen.words["noun"].count} in db)") { part = "noun" }
+          menu.choice("Plural (#{@gen.words["plur"].count} in db)") { part = "plur" }
+          menu.choice("Verb participle (#{@gen.words["verb_part"].count} in db)") { part = "verb_part" }
+          menu.choice("Verb transitive (#{@gen.words["verb_trans"].count} in db)") { part = "verb_trans" }
+          menu.choice("Verb intransitive (#{@gen.words["verb_intrans"].count} in db)") { part = "verb_intrans" }
+          menu.choice("Adjective (#{@gen.words["adj"].count} in db)") { part = "adj" }
         end
 
         data[:part] = part
