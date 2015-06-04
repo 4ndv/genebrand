@@ -1,12 +1,12 @@
-require "bundler/gem_tasks"
-require "rspec/core/rake_task"
+require 'bundler/gem_tasks'
+require 'rspec/core/rake_task'
 
 RSpec::Core::RakeTask.new(:spec)
 
-task :default => :spec
+task default: :spec
 
 task :buildgem do
-  require "./lib/genebrand/version"
+  require './lib/genebrand/version'
 
   `gem uninstall genebrand -x`
   `rm ./genebrand-*.gem`
@@ -15,8 +15,8 @@ task :buildgem do
 end
 
 task :parsepos do
-  require "./lib/genebrand/posparser.rb"
+  require './lib/genebrand/posparser.rb'
 
   parser = Genebrand::PosParser.new
-  parser.parseandsave("lib/data/pos.txt")
+  parser.parseandsave('lib/data/pos.txt')
 end

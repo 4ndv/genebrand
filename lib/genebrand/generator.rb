@@ -3,14 +3,14 @@ module Genebrand
     attr_reader :words
 
     def initialize
-      @words = JSON.parse(File.read(File.join(Gem::Specification.find_by_name("genebrand").gem_dir, "lib/data/posinfo.json")))
+      @words = JSON.parse(File.read(File.join(Gem::Specification.find_by_name('genebrand').gem_dir, 'lib/data/posinfo.json')))
     end
 
     def generate(info)
-      out = Array.new
+      out = []
 
       puts
-      puts "Generating brands with these parameters:".cyan
+      puts 'Generating brands with these parameters:'.cyan
       puts
       i = 1
 
@@ -19,7 +19,7 @@ module Genebrand
           puts "#{i}. Word: #{item[:word]}".green
         elsif item[:type] == :part
           puts "#{i}. Part of speech: #{item[:part]}".green
-          puts "Filters:"
+          puts 'Filters:'
           item[:filters].each do |filter, value|
             if filter == :minlen
               puts "Minimum length: #{value}"

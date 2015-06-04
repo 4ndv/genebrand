@@ -4,48 +4,46 @@ module Genebrand
     require 'fileutils'
 
     def initialize
-      @parsed = Hash.new
-      @table = Hash.new
+      @parsed = {}
+      @table = {}
       # Сущ
-      @table["N"] = @parsed["noun"] = Array.new
+      @table['N'] = @parsed['noun'] = []
       # Мн. число
-      @table["P"] = @parsed["plur"] = Array.new
+      @table['P'] = @parsed['plur'] = []
       # Глаг. прич, пер, непер
-      @table["V"] = @parsed["verb_part"] = Array.new
-      @table["t"] = @parsed["verb_trans"] = Array.new
-      @table["i"] = @parsed["verb_intrans"] = Array.new
+      @table['V'] = @parsed['verb_part'] = []
+      @table['t'] = @parsed['verb_trans'] = []
+      @table['i'] = @parsed['verb_intrans'] = []
       # Прилаг
-      @table["A"] = @parsed["adj"] = Array.new
+      @table['A'] = @parsed['adj'] = []
     end
 
     def parse(filename)
-      if not File.exists?(filename)
-        raise "File not found: #{filename}"
+      unless File.exist?(filename)
+        fail "File not found: #{filename}"
         return
       end
 
       File.open(filename, 'r').each_line do |line|
         data = line.split("\t")
 
-        if !is_numeric?(data[0]) and (/\A[a-zA-Z0-9]{2,10}\z/.match(data[0]) != nil)
-          data[1].split("").each do |partofsp|
-            if @table.has_key?(partofsp)
-              @table[partofsp].push(data[0])
-            end
+        if !is_numeric?(data[0]) && (!/\A[a-zA-Z0-9]{2,10}\z/.match(data[0]).nil?)
+          data[1].split('').each do |partofsp|
+            @table[partofsp].push(data[0]) if @table.key?(partofsp)
           end
         end
       end
 
-      return @parsed
+      @parsed
     end
 
     def parseandsave(filename)
       FileUtils.mkdir_p 'lib/data'
-      File.open("lib/data/posinfo.json", 'w+') {|f| f.write(self.parse(filename).to_json) }
+      File.open('lib/data/posinfo.json', 'w+') { |f| f.write(parse(filename).to_json) }
     end
 
     def is_numeric?(obj)
-      obj.to_s.match(/\A[+-]?\d+?(\.\d+)?\Z/) == nil ? false : true
+      obj.to_s.match(/\A[+-]?\d+?(\.\d+)?\Z/).nil? ? false : true
     end
   end
 end

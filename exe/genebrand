@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 STDOUT.sync = true
 
-$:.unshift File.join(File.dirname(__FILE__), *%w{ .. lib })
+$LOAD_PATH.unshift File.join(File.dirname(__FILE__), *%w(.. lib))
 
 require 'genebrand'
 require 'mercenary'
@@ -11,13 +11,13 @@ Mercenary.program(:genebrand) do |p|
   p.description 'Genebrand is a small brands generator'
   p.syntax 'genebrand <subcommand> [options]'
 
-  p.action do |args, options|
+  p.action do |args, _options|
     if args.empty?
-      Genebrand::Logger.error "A subcommand is required. Use --help for more information"
+      Genebrand::Logger.error 'A subcommand is required. Use --help for more information'
       abort
     else
       unless p.has_command?(args.first)
-        Genebrand::Logger.hint "Invalid command. Use --help for more information"
+        Genebrand::Logger.hint 'Invalid command. Use --help for more information'
         abort
       end
     end

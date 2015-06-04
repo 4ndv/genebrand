@@ -67,7 +67,7 @@ module Genebrand
 
         data[:part] = part
 
-        return addfilters(data)
+        addfilters(data)
       end
 
       def check_filter_conflict(data)
@@ -134,7 +134,7 @@ module Genebrand
           end
         end
 
-        return data
+        data
       end
     end
   end
