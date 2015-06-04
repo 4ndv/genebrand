@@ -13,6 +13,8 @@ module Genebrand
             process(args, options)
           end
         end
+
+        p.default_command(:new)
       end
 
       def process(_args, _options)
