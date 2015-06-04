@@ -16,7 +16,7 @@ module Genebrand
       puts text.bold
     end
 
-    def self.info(text)
+    def self.log(text)
       puts text
     end
   end
