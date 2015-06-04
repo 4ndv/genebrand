@@ -1,9 +1,27 @@
 module Genebrand
   class Generator
+    require 'resolv'
+
     attr_reader :words
 
     def initialize
       @words = JSON.parse(File.read(File.join(Gem::Specification.find_by_name('genebrand').gem_dir, 'lib/data/posinfo.json')))
+    end
+
+    def prettyoutput(domain)
+      data = '['
+
+      # A bit hacky, but pretty fast method to guess domain available or not
+      resolv = Resolv::DNS.open
+      data << (resolv.getresources("#{domain}.com", Resolv::DNS::Resource::IN::NS).count == 0 ? "com".green : "com".red)
+      data << ' '
+      data << (resolv.getresources("#{domain}.new", Resolv::DNS::Resource::IN::NS).count == 0 ? "net".green : "net".red)
+      data << ' '
+      data << (resolv.getresources("#{domain}.org", Resolv::DNS::Resource::IN::NS).count == 0 ? "org".green : "org".red)
+      data << "]\t"
+      data << domain.bold
+
+      return data
     end
 
     def generate(info)
@@ -57,25 +75,61 @@ module Genebrand
             elsif filter == :maxlen
               parts = parts.select { |i| i[/^.{,#{value}}$/] }
             elsif filter == :starts
-              parts = parts.select { |i| i[/^#{value}.*$/] }
+              parts = parts.select { |i| i[/^#{value}.*$/i] }
             elsif filter == :ends
-              parts = parts.select { |i| i[/^.*#{value}$/] }
+              parts = parts.select { |i| i[/^.*#{value}$/i] }
             elsif filter == :contains
-              parts = parts.select { |i| i[/^.*(#{value}).*$/] }
+              parts = parts.select { |i| i[/^.*(#{value}).*$/i] }
             end
           end
 
-          gener.push(parts)
+          if parts.count > 0
+            gener.push(parts)
+          else
+            Genebrand::Logger.warning "0 variants for that part, will be skipped"
+          end
         end
       end
 
       approx = 1
 
       gener.each do |item|
-        approx *= item.count if item.is_a? Array
+        if item.is_a? Array
+          approx *= item.count
+        end
       end
 
+      #arrdata.reverse!
+
       puts 'Available variants: '.yellow + approx.to_s.bold
+      puts
+
+      puts "Whois info\tBrand"
+
+      finish = false
+      i = 0
+      while not finish
+        itemd = ''
+
+        gener.each_with_index do |item, index|
+          if item.is_a? Array
+            ind = rand(gener[index].count)
+            itemd << gener[index][ind].capitalize
+          else
+            itemd << gener[index].capitalize
+          end
+        end
+
+        puts prettyoutput(itemd)
+
+        i += 1
+
+        if i%15 == 0
+          puts
+          puts "Press any key to see next variants".cyan
+          gets
+        end
+      end
     end
   end
 end
