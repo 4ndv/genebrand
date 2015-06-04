@@ -1,5 +1,7 @@
 # Genebrand
 
+[![Code Climate](https://codeclimate.com/github/andreyviktorov/genebrand/badges/gpa.svg)](https://codeclimate.com/github/andreyviktorov/genebrand)
+
 CLI brand names generator
 
 ## Installation

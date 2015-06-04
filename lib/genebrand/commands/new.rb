@@ -95,9 +95,18 @@ module Genebrand
                 data[:filters][:starts] = ask("Enter symbols word should start with")
               end
             end
-            
-              menu.choice("Ends with")
-              menu.choice("Contains")
+
+            if data[:filters][:ends] == nil
+              menu.choice("Ends with") do
+                data[:filters][:ends] = ask("Enter symbols word should end with")
+              end
+            end
+
+            if data[:filters][:contains] == nil
+              menu.choice("Contains") do
+                data[:filters][:contains] = ask("Enter symbols word should contain")
+              end
+            end
           end
         end
       end
