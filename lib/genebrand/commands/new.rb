@@ -90,6 +90,7 @@ module Genebrand
 
         catch :filter_done do
           loop do
+            puts
             choose do |menu|
               menu.prompt = 'Choose filters for this words'.yellow
 
@@ -97,7 +98,7 @@ module Genebrand
 
               if data[:filters][:minlen].nil?
                 menu.choice('Minimum length') do
-                  data[:filters][:minlen] = ask('Enter minimum word length (between 1 and 10)  ', Integer) do |q|
+                  data[:filters][:minlen] = ask('Enter minimum word length (between 1 and 10)', Integer) do |q|
                     q.in = 1..10
                   end
                 end
