@@ -15,7 +15,7 @@ module Genebrand
       resolv = Resolv::DNS.open
       data << (resolv.getresources("#{domain}.com", Resolv::DNS::Resource::IN::NS).count == 0 ? "com".green : "com".red)
       data << ' '
-      data << (resolv.getresources("#{domain}.new", Resolv::DNS::Resource::IN::NS).count == 0 ? "net".green : "net".red)
+      data << (resolv.getresources("#{domain}.net", Resolv::DNS::Resource::IN::NS).count == 0 ? "net".green : "net".red)
       data << ' '
       data << (resolv.getresources("#{domain}.org", Resolv::DNS::Resource::IN::NS).count == 0 ? "org".green : "org".red)
       data << "]\t"
