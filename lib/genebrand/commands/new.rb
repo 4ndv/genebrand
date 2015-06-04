@@ -19,9 +19,15 @@ module Genebrand
         puts "Hello! Let's generate some brands!".cyan
         puts
 
+        choose do |menu|
+          menu.prompt = 'Which word DB should i use?'.yellow
+
+          menu.choice('Full (lots of words, but not high quality)') { @gen = Genebrand::Generator.new('posinfo.json') }
+          menu.choice('100k (based on top 100k English words, better quality)') { @gen = Genebrand::Generator.new('pos100k.json') }
+          menu.choice('10k (based on top 10k English words, best quality)') { @gen = Genebrand::Generator.new('pos10k.json') }
+        end
+
         brand = []
-        stopit = false
-        @gen = Genebrand::Generator.new
 
         catch :parts_done do
           loop do

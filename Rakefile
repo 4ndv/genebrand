@@ -1,11 +1,6 @@
 require 'bundler/gem_tasks'
-require 'rspec/core/rake_task'
 
-RSpec::Core::RakeTask.new(:spec)
-
-task default: :spec
-
-task :buildgem do
+task :default do
   require './lib/genebrand/version'
 
   `gem uninstall genebrand -x`
@@ -14,9 +9,16 @@ task :buildgem do
   `gem install ./genebrand-#{Genebrand::VERSION}.gem`
 end
 
-task :parsepos do
+task :seed do
   require './lib/genebrand/posparser.rb'
 
+  puts "Parsing all data"
   parser = Genebrand::PosParser.new
-  parser.parseandsave('lib/data/pos.txt')
+  parser.parseandsave('seed/pos.txt', 'data/posinfo.json')
+
+  puts "Parsing with top 100k"
+  parser.parseandsave_top('seed/pos.txt', 'seed/100k.txt', 'data/pos100k.json')
+
+  puts "Parsing with top 10k"
+  parser.parseandsave_top('seed/pos.txt', 'seed/10k.txt', 'data/pos10k.json')
 end

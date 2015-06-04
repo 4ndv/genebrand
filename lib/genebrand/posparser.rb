@@ -3,7 +3,7 @@ module Genebrand
     require 'json'
     require 'fileutils'
 
-    def initialize
+    def init
       @parsed = {}
       @table = {}
       # Сущ
@@ -19,6 +19,8 @@ module Genebrand
     end
 
     def parse(filename)
+      init
+
       unless File.exist?(filename)
         fail "File not found: #{filename}"
         return
@@ -37,9 +39,40 @@ module Genebrand
       @parsed
     end
 
-    def parseandsave(filename)
+    def parse_top(filename, top)
+      init
+
+      unless File.exist?(filename)
+        fail "File not found: #{filename}"
+        return
+      end
+
+      top = []
+      File.open(top, 'r').each_line do |line|
+        top << line
+      end
+
+      File.open(filename, 'r').each_line do |line|
+        data = line.split("\t")
+
+        if !is_numeric?(data[0]) && (!/\A[a-zA-Z0-9]{2,10}\z/.match(data[0]).nil?) && top.include?(data[0])
+          data[1].split('').each do |partofsp|
+            @table[partofsp].push(data[0]) if @table.key?(partofsp)
+          end
+        end
+      end
+
+      @parsed
+    end
+
+    def parseandsave(filename, to)
       FileUtils.mkdir_p 'lib/data'
-      File.open('lib/data/posinfo.json', 'w+') { |f| f.write(parse(filename).to_json) }
+      File.open(to, 'w+') { |f| f.write(parse(filename).to_json) }
+    end
+
+    def parseandsave_top(filename, top, to)
+      FileUtils.mkdir_p 'lib/data'
+      File.open(to, 'w+') { |f| f.write(parse_top(filename, top).to_json) }
     end
 
     def is_numeric?(obj)

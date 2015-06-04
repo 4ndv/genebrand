@@ -4,8 +4,8 @@ module Genebrand
 
     attr_reader :words
 
-    def initialize
-      @words = JSON.parse(File.read(File.join(Gem::Specification.find_by_name('genebrand').gem_dir, 'lib/data/posinfo.json')))
+    def initialize(filename)
+      @words = JSON.parse(File.read(File.join(Gem::Specification.find_by_name('genebrand').gem_dir, "lib/data/#{filename}")))
     end
 
     def prettyoutput(domain)
