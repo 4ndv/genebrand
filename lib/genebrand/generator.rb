@@ -3,22 +3,25 @@ module Genebrand
     require 'resolv'
 
     attr_reader :words
+    attr_accessor :nowhois
 
     def initialize(filename)
       @words = JSON.parse(File.read(File.join(Gem::Specification.find_by_name('genebrand').gem_dir, "lib/data/#{filename}")))
     end
 
     def prettyoutput(domain)
-      data = '['
+      if not @nowhois
+        data = '['
 
-      # A bit hacky, but pretty fast method to guess domain available or not
-      resolv = Resolv::DNS.open
-      data << (resolv.getresources("#{domain}.com", Resolv::DNS::Resource::IN::NS).count == 0 ? "com".green : "com".red)
-      data << ' '
-      data << (resolv.getresources("#{domain}.net", Resolv::DNS::Resource::IN::NS).count == 0 ? "net".green : "net".red)
-      data << ' '
-      data << (resolv.getresources("#{domain}.org", Resolv::DNS::Resource::IN::NS).count == 0 ? "org".green : "org".red)
-      data << "]\t"
+        # A bit hacky, but pretty fast method to guess domain available or not
+        resolv = Resolv::DNS.open
+        data << (resolv.getresources("#{domain}.com", Resolv::DNS::Resource::IN::NS).count == 0 ? "com".green : "com".red)
+        data << ' '
+        data << (resolv.getresources("#{domain}.net", Resolv::DNS::Resource::IN::NS).count == 0 ? "net".green : "net".red)
+        data << ' '
+        data << (resolv.getresources("#{domain}.org", Resolv::DNS::Resource::IN::NS).count == 0 ? "org".green : "org".red)
+        data << "]\t"
+      end
       data << domain.bold
 
       return data
@@ -104,7 +107,11 @@ module Genebrand
       puts 'Available variants: '.yellow + approx.to_s.bold
       puts
 
-      puts "Whois info\tBrand"
+      if @nowhois
+        puts "Brand"
+      else
+        puts "Whois info\tBrand"
+      end
 
       finish = false
       i = 0

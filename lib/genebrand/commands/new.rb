@@ -53,6 +53,12 @@ module Genebrand
           end
         end
 
+        choose do |menu|
+          menu.prompt = 'Check domain availability?'.yellow
+
+          menu.choice('Yes')
+          menu.choice('No') { @gen.nowhois = true }
+
         @gen.generate(brand)
       end
 

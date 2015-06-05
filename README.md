@@ -38,7 +38,7 @@ Bitcoin:
 
 **1EoaB8uSnXEfgE3XUZafNs8aETEqdRppku**
 
-Yandex.Money (only Russia and CIS):
+Yandex.Money:
 
 **410013115721646**
 
