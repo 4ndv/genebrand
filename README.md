@@ -2,7 +2,7 @@
 
 [![Code Climate](https://codeclimate.com/github/andreyviktorov/genebrand/badges/gpa.svg)](https://codeclimate.com/github/andreyviktorov/genebrand)
 
-CLI brand names generator
+CLI brand names generator with auto domain whois
 
 ## Installation
 
@@ -32,13 +32,3 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/andrey
 ## License
 
 The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
-
-## TODO
-
-* Whois
-
-* Using word tops for seeding
-
-* Write tests
-
-* Refactor `generator.rb`

@@ -46,7 +46,7 @@ module Genebrand
 
               menu.choice('Specific part of speech') { brand.push(pickpart) }
 
-              if brand.length > 1
+              if brand.length > 0
                 menu.choice('Enough, show me some brands!') { throw :parts_done }
               end
             end
