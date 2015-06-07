@@ -34,12 +34,16 @@ module Genebrand
       File.open(filename, 'r').each_line do |line|
         data = line.split("\t")
 
-        data[1].split('').each do |partofsp|
-          @table[partofsp].push(data[0].downcase) if @table.key?(partofsp)
-        end
+        getparts(data)
       end
 
       @parsed
+    end
+
+    def getparts(data)
+      data[1].split('').each do |partofsp|
+        @table[partofsp].push(data[0].downcase) if @table.key?(partofsp)
+      end
     end
 
     def parse_top(filename, top)
@@ -63,9 +67,7 @@ module Genebrand
         data = line.split("\t")
 
         if toparr.include?(data[0])
-          data[1].split('').each do |partofsp|
-            @table[partofsp].push(data[0].downcase) if @table.key?(partofsp)
-          end
+          getparts(data)
         end
         it+=1
         if it % 10000 == 0

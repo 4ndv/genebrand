@@ -10,26 +10,21 @@ module Genebrand
     end
 
     def prettyoutput(domain)
+      data = ''
       if not @nowhois
-        data = '['
-
         # A bit hacky, but pretty fast method to guess domain available or not
         resolv = Resolv::DNS.open
-        data << (resolv.getresources("#{domain}.com", Resolv::DNS::Resource::IN::NS).count == 0 ? "com".green : "com".red)
-        data << ' '
-        data << (resolv.getresources("#{domain}.net", Resolv::DNS::Resource::IN::NS).count == 0 ? "net".green : "net".red)
-        data << ' '
-        data << (resolv.getresources("#{domain}.org", Resolv::DNS::Resource::IN::NS).count == 0 ? "org".green : "org".red)
-        data << "]\t"
+        com = resolv.getresources("#{domain}.com", Resolv::DNS::Resource::IN::NS).count == 0 ? "com".green : "com".red
+        net = resolv.getresources("#{domain}.net", Resolv::DNS::Resource::IN::NS).count == 0 ? "net".green : "net".red
+        org = resolv.getresources("#{domain}.org", Resolv::DNS::Resource::IN::NS).count == 0 ? "org".green : "org".red
+        data = "[#{com} #{net} #{org}]\t"
       end
       data << domain.bold
 
       return data
     end
 
-    def generate(info)
-      out = []
-
+    def getinfo(info)
       puts
       puts 'Generating brands with these parameters:'.cyan
       puts
@@ -58,10 +53,12 @@ module Genebrand
 
         i += 1
       end
+    end
 
-      puts
-      puts 'Press any key to continue'.cyan
-      puts
+    def generate(info)
+      out = []
+
+      getinfo(info)
 
       puts 'Fetching variants...'
       gener = []
