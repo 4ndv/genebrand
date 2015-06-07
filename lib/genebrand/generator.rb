@@ -9,19 +9,24 @@ module Genebrand
       @words = JSON.parse(File.read(File.join(Gem::Specification.find_by_name('genebrand').gem_dir, "lib/data/#{filename}")))
     end
 
+    def is_available?(domain, zone)
+      resolv = Resolv::DNS.open
+      return resolv.getresources("#{domain}.#{zone}", Resolv::DNS::Resource::IN::NS).count == 0
+    end
+
     def prettyoutput(domain)
       data = ''
-      if not @nowhois
+      unless @nowhois
         # A bit hacky, but pretty fast method to guess domain available or not
         resolv = Resolv::DNS.open
-        com = resolv.getresources("#{domain}.com", Resolv::DNS::Resource::IN::NS).count == 0 ? "com".green : "com".red
-        net = resolv.getresources("#{domain}.net", Resolv::DNS::Resource::IN::NS).count == 0 ? "net".green : "net".red
-        org = resolv.getresources("#{domain}.org", Resolv::DNS::Resource::IN::NS).count == 0 ? "org".green : "org".red
+        com = is_available?(domain, "com") ? 'com'.green : 'com'.red
+        net = is_available?(domain, "net") ? 'net'.green : 'net'.red
+        org = is_available?(domain, "org") ? 'org'.green : 'org'.red
         data = "[#{com} #{net} #{org}]\t"
       end
       data << domain.bold
 
-      return data
+      data
     end
 
     def getinfo(info)
@@ -55,17 +60,11 @@ module Genebrand
       end
     end
 
-    def generate(info)
-      out = []
-
-      getinfo(info)
-
-      puts 'Fetching variants...'
+    def prepareparts(info)
       gener = []
-      wordscount = 0
+      puts 'Fetching variants...'
       info.each do |item|
         if item[:type] == :word
-          wordscount += 1
           gener.push(item[:word])
         elsif item[:type] == :part
           parts = @words[item[:part]]
@@ -86,33 +85,23 @@ module Genebrand
           if parts.count > 0
             gener.push(parts)
           else
-            Genebrand::Logger.warning "0 variants for that part, will be skipped"
+            Genebrand::Logger.warning '0 variants for that part, will be skipped'
           end
         end
       end
 
-      approx = 1
+      gener
+    end
 
-      gener.each do |item|
-        if item.is_a? Array
-          approx *= item.count
-        end
-      end
-
-      #arrdata.reverse!
-
-      puts 'Available variants: '.yellow + approx.to_s.bold
-      puts
-
+    def proceedgen(gener)
       if @nowhois
-        puts "Brand"
+        puts 'Brand'
       else
         puts "Whois info\tBrand"
       end
 
-      finish = false
       i = 0
-      while not finish
+      loop do
         itemd = ''
 
         gener.each_with_index do |item, index|
@@ -128,12 +117,33 @@ module Genebrand
 
         i += 1
 
-        if i%15 == 0
+        if i % 15 == 0
           puts
-          puts "Press any key to see next variants".cyan
+          puts 'Press any key to see next variants'.cyan
           gets
         end
       end
+    end
+
+    def countvariants(gener)
+      approx = 1
+
+      gener.each do |item|
+        approx *= item.count if item.is_a? Array
+      end
+
+      puts 'Available variants: '.yellow + approx.to_s.bold
+      puts
+    end
+
+    def generate(info)
+      getinfo(info)
+
+      gener = prepareparts(info)
+
+      countvariants(gener)
+
+      proceedgen(gener)
     end
   end
 end

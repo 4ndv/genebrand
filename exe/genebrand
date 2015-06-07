@@ -3,7 +3,7 @@ STDOUT.sync = true
 
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), *%w(.. lib))
 
-trap("SIGINT") { exit! }
+trap('SIGINT') { exit! }
 
 require 'genebrand'
 require 'mercenary'

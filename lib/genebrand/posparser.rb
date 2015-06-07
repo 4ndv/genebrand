@@ -30,7 +30,7 @@ module Genebrand
         return
       end
 
-      puts "Seeding"
+      puts 'Seeding'
       File.open(filename, 'r').each_line do |line|
         data = line.split("\t")
 
@@ -54,25 +54,21 @@ module Genebrand
         return
       end
 
-      puts "Load top"
+      puts 'Load top'
       toparr = []
       File.open(top, 'r').each_line do |line|
         toparr << line.strip.downcase
       end
       puts toparr.count
 
-      puts "Seeding"
+      puts 'Seeding'
       it = 0
       File.open(filename, 'r').each_line do |line|
         data = line.split("\t")
 
-        if toparr.include?(data[0])
-          getparts(data)
-        end
-        it+=1
-        if it % 10000 == 0
-          puts it
-        end
+        getparts(data) if toparr.include?(data[0])
+        it += 1
+        puts it if it % 10_000 == 0
       end
 
       @parsed
@@ -88,7 +84,7 @@ module Genebrand
         return
       end
 
-      puts "Preseed"
+      puts 'Preseed'
       File.open(filename, 'r').each_line do |line|
         data = line.split("\t")
 
