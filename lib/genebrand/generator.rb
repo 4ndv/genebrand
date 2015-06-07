@@ -7,6 +7,13 @@ module Genebrand
 
     def initialize(filename)
       @words = JSON.parse(File.read(File.join(Gem::Specification.find_by_name('genebrand').gem_dir, "lib/data/#{filename}")))
+      @filtername = {
+        minlen: "Minimum length:",
+        maxlen: "Maximum length:",
+        starts: "Starts with:",
+        ends: "Ends with:",
+        contains: "Contains:"
+      }
     end
 
     def is_available?(domain, zone)
@@ -42,22 +49,31 @@ module Genebrand
           puts "#{i}. Part of speech: #{item[:part]}".green
           puts 'Filters:'
           item[:filters].each do |filter, value|
-            if filter == :minlen
-              puts "Minimum length: #{value}"
-            elsif filter == :maxlen
-              puts "Maximum length: #{value}"
-            elsif filter == :starts
-              puts "Starts with: #{value}"
-            elsif filter == :ends
-              puts "Ends with: #{value}"
-            elsif filter == :contains
-              puts "Contains: #{value}"
-            end
+            puts "#{@filtername[filter]} value"
           end
         end
 
         i += 1
       end
+    end
+
+    def applyfilters(part)
+      parts = @words[part]
+      item[:filters].each do |filter, value|
+        if filter == :minlen
+          parts = parts.select { |i| i[/^.{#{value},}$/] }
+        elsif filter == :maxlen
+          parts = parts.select { |i| i[/^.{,#{value}}$/] }
+        elsif filter == :starts
+          parts = parts.select { |i| i[/^#{value}.*$/i] }
+        elsif filter == :ends
+          parts = parts.select { |i| i[/^.*#{value}$/i] }
+        elsif filter == :contains
+          parts = parts.select { |i| i[/^.*(#{value}).*$/i] }
+        end
+      end
+
+      parts
     end
 
     def prepareparts(info)
@@ -67,21 +83,7 @@ module Genebrand
         if item[:type] == :word
           gener.push(item[:word])
         elsif item[:type] == :part
-          parts = @words[item[:part]]
-          item[:filters].each do |filter, value|
-            if filter == :minlen
-              parts = parts.select { |i| i[/^.{#{value},}$/] }
-            elsif filter == :maxlen
-              parts = parts.select { |i| i[/^.{,#{value}}$/] }
-            elsif filter == :starts
-              parts = parts.select { |i| i[/^#{value}.*$/i] }
-            elsif filter == :ends
-              parts = parts.select { |i| i[/^.*#{value}$/i] }
-            elsif filter == :contains
-              parts = parts.select { |i| i[/^.*(#{value}).*$/i] }
-            end
-          end
-
+          parts = applyfilters(item[:part])
           if parts.count > 0
             gener.push(parts)
           else
@@ -94,12 +96,6 @@ module Genebrand
     end
 
     def proceedgen(gener)
-      if @nowhois
-        puts 'Brand'
-      else
-        puts "Whois info\tBrand"
-      end
-
       i = 0
       loop do
         itemd = ''
@@ -142,6 +138,12 @@ module Genebrand
       gener = prepareparts(info)
 
       countvariants(gener)
+
+      if @nowhois
+        puts 'Brand'
+      else
+        puts "Whois info\tBrand"
+      end
 
       proceedgen(gener)
     end
