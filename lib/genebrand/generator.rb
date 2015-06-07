@@ -57,20 +57,26 @@ module Genebrand
       end
     end
 
+    def filter(parts, filter, value)
+      case filter
+      when :minlen
+        parts = parts.select { |i| i[/^.{#{value},}$/] }
+      when :maxlen
+        parts = parts.select { |i| i[/^.{,#{value}}$/] }
+      when :starts
+        parts = parts.select { |i| i[/^#{value}.*$/i] }
+      when :ends
+        parts = parts.select { |i| i[/^.*#{value}$/i] }
+      when :contains
+        parts = parts.select { |i| i[/^.*(#{value}).*$/i] }
+      end
+      parts
+    end
+
     def applyfilters(part)
       parts = @words[part]
       item[:filters].each do |filter, value|
-        if filter == :minlen
-          parts = parts.select { |i| i[/^.{#{value},}$/] }
-        elsif filter == :maxlen
-          parts = parts.select { |i| i[/^.{,#{value}}$/] }
-        elsif filter == :starts
-          parts = parts.select { |i| i[/^#{value}.*$/i] }
-        elsif filter == :ends
-          parts = parts.select { |i| i[/^.*#{value}$/i] }
-        elsif filter == :contains
-          parts = parts.select { |i| i[/^.*(#{value}).*$/i] }
-        end
+        parts = filter(parts, filter, value)
       end
 
       parts
