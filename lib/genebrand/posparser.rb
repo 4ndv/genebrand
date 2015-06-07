@@ -3,11 +3,8 @@ module Genebrand
     require 'json'
     require 'fileutils'
 
+    # Fills parts of speech table
     def initialize
-      init
-    end
-
-    def init
       @parsed = {}
       @table = {}
       # Сущ
@@ -22,6 +19,10 @@ module Genebrand
       @table['A'] = @parsed['adj'] = []
     end
 
+    # Parses file of word\tpartofspeech
+    #
+    # @param [String] filename that should be parsed
+    # @return [Hash] of partofspeech => words
     def parse(filename)
       init
 

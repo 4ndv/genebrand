@@ -1,6 +1,7 @@
-# Genebrand
-
 [![Code Climate](https://codeclimate.com/github/andreyviktorov/genebrand/badges/gpa.svg)](https://codeclimate.com/github/andreyviktorov/genebrand)
+[![Inline docs](http://inch-ci.org/github/andreyviktorov/genebrand.png)](http://inch-ci.org/github/andreyviktorov/genebrand)
+
+# Genebrand
 
 CLI brand names generator with auto domain availability check
 
