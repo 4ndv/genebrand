@@ -40,20 +40,18 @@ module Genebrand
       puts
       puts 'Generating brands with these parameters:'.cyan
       puts
-      i = 1
+      i = 0
 
       info.each do |item|
         if item[:type] == :word
-          puts "#{i}. Word: #{item[:word]}".green
+          puts "#{i += 1}. Word: #{item[:word]}".green
         elsif item[:type] == :part
-          puts "#{i}. Part of speech: #{item[:part]}".green
+          puts "#{i += 1}. Part of speech: #{item[:part]}".green
           puts 'Filters:'
           item[:filters].each do |filter, value|
             puts "#{@filtername[filter]} value"
           end
         end
-
-        i += 1
       end
     end
 
@@ -101,20 +99,26 @@ module Genebrand
       gener
     end
 
+    def generateone(gener)
+      itemd = ''
+
+      gener.each_with_index do |item, index|
+        if item.is_a? Array
+          ind = rand(gener[index].count)
+          itemd << gener[index][ind].capitalize
+        else
+          itemd << gener[index].capitalize
+        end
+      end
+
+      itemd
+    end
+
     def proceedgen(gener)
       i = 0
       loop do
-        itemd = ''
 
-        gener.each_with_index do |item, index|
-          if item.is_a? Array
-            ind = rand(gener[index].count)
-            itemd << gener[index][ind].capitalize
-          else
-            itemd << gener[index].capitalize
-          end
-        end
-
+        itemd = generateone(gener)
         puts prettyoutput(itemd)
 
         i += 1
