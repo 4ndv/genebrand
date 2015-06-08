@@ -37,10 +37,8 @@ module Genebrand
               menu.prompt = 'What should we add?'.yellow
 
               menu.choice('String') do
-                brand.push(type: :word,
-                           word: ask('Enter word (English, no spaces and punctiation, 1-10 symbols)')) do |q|
-                  q.validate = /\A[a-zA-Z\d]{1,10}\z/
-                end
+                str = { type: :word, word: ask('Enter word (English, no spaces and punctiation, 1-10 symbols)') { |q| q.validate = /\A[a-zA-Z\d]{1,10}\z/ } }
+                brand.push(str)
                 puts
               end
 
@@ -58,6 +56,7 @@ module Genebrand
 
           menu.choice('Yes')
           menu.choice('No') { @gen.nowhois = true }
+        end
 
         @gen.generate(brand)
       end

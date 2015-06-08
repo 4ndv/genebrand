@@ -8,17 +8,17 @@ module Genebrand
     def initialize(filename)
       @words = JSON.parse(File.read(File.join(Gem::Specification.find_by_name('genebrand').gem_dir, "lib/data/#{filename}")))
       @filtername = {
-        minlen: "Minimum length:",
-        maxlen: "Maximum length:",
-        starts: "Starts with:",
-        ends: "Ends with:",
-        contains: "Contains:"
+        minlen: 'Minimum length:',
+        maxlen: 'Maximum length:',
+        starts: 'Starts with:',
+        ends: 'Ends with:',
+        contains: 'Contains:'
       }
     end
 
     def is_available?(domain, zone)
       resolv = Resolv::DNS.open
-      return resolv.getresources("#{domain}.#{zone}", Resolv::DNS::Resource::IN::NS).count == 0
+      resolv.getresources("#{domain}.#{zone}", Resolv::DNS::Resource::IN::NS).count == 0
     end
 
     def prettyoutput(domain)
@@ -26,9 +26,9 @@ module Genebrand
       unless @nowhois
         # A bit hacky, but pretty fast method to guess domain available or not
         resolv = Resolv::DNS.open
-        com = is_available?(domain, "com") ? 'com'.green : 'com'.red
-        net = is_available?(domain, "net") ? 'net'.green : 'net'.red
-        org = is_available?(domain, "org") ? 'org'.green : 'org'.red
+        com = is_available?(domain, 'com') ? 'com'.green : 'com'.red
+        net = is_available?(domain, 'net') ? 'net'.green : 'net'.red
+        org = is_available?(domain, 'org') ? 'org'.green : 'org'.red
         data = "[#{com} #{net} #{org}]\t"
       end
       data << domain.bold
@@ -48,7 +48,7 @@ module Genebrand
         elsif item[:type] == :part
           puts "#{i += 1}. Part of speech: #{item[:part]}".green
           puts 'Filters:'
-          item[:filters].each do |filter, value|
+          item[:filters].each do |filter, _value|
             puts "#{@filtername[filter]} value"
           end
         end
@@ -117,7 +117,6 @@ module Genebrand
     def proceedgen(gener)
       i = 0
       loop do
-
         itemd = generateone(gener)
         puts prettyoutput(itemd)
 
