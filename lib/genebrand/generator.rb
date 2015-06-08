@@ -49,7 +49,7 @@ module Genebrand
           puts "#{i += 1}. Part of speech: #{item[:part]}".green
           puts 'Filters:'
           item[:filters].each do |filter, _value|
-            puts "#{@filtername[filter]} value"
+            puts "#{@filtername[filter]} #{_value}"
           end
         end
       end
@@ -71,8 +71,8 @@ module Genebrand
       parts
     end
 
-    def applyfilters(part)
-      parts = @words[part]
+    def applyfilters(item)
+      parts = @words[item[:part]]
       item[:filters].each do |filter, value|
         parts = filter(parts, filter, value)
       end
@@ -87,7 +87,7 @@ module Genebrand
         if item[:type] == :word
           gener.push(item[:word])
         elsif item[:type] == :part
-          parts = applyfilters(item[:part])
+          parts = applyfilters(item)
           if parts.count > 0
             gener.push(parts)
           else
